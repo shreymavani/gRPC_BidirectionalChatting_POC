@@ -58,7 +58,7 @@ public class ChatServer {
         @Override
         public StreamObserver<Chat.ChatMessage> chat(StreamObserver<Chat.ChatMessage> responseObserver) {
             connectedClients.put(responseObserver, ""); // Add the client to the connected clients list
-
+            System.out.println("Client added "+ responseObserver);
             return new StreamObserver<Chat.ChatMessage>() {
                 @Override
                 public void onNext(Chat.ChatMessage chatMessage) {
@@ -77,14 +77,14 @@ public class ChatServer {
 
                 @Override
                 public void onError(Throwable throwable) {
-                    System.err.println("Error in chat stream: " + throwable.getMessage());
+                    System.err.println("Error in chat stream: " + throwable.getMessage() + responseObserver);
                     connectedClients.remove(responseObserver); // Remove the client from the connected clients list
                 }
 
                 @Override
                 public void onCompleted() {
                     responseObserver.onCompleted();
-                    System.out.println("Connection Over");
+                    System.out.println("Connection Over "+ responseObserver);
                     connectedClients.remove(responseObserver); // Remove the client from the connected clients list
                 }
             };
